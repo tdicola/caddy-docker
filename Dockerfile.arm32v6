@@ -8,11 +8,14 @@ FROM abiosoft/caddy:builder as builder
 ARG version="0.11.1"
 ARG plugins="git,cors,realip,expires,cache"
 
+ENV GOARCH=arm
+ENV GOARM=6
+
 # process wrapper
 RUN go get -v github.com/abiosoft/parent
 
 # Note the explicit ARM32v6 cross compilation variables!
-RUN GOARCH=arm GOARM=6 VERSION=${version} PLUGINS=${plugins} /bin/sh /usr/bin/builder.sh
+RUN VERSION=${version} PLUGINS=${plugins} /bin/sh /usr/bin/builder.sh
 
 #
 # Final stage
@@ -54,6 +57,8 @@ COPY index.html /srv/index.html
 
 # install process wrapper
 COPY --from=builder /go/bin/parent /bin/parent
+
+RUN file /bin/parent
 
 ENTRYPOINT ["/bin/parent", "caddy"]
 CMD ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree=$ACME_AGREE"]
