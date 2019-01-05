@@ -12,7 +12,8 @@ ENV GOARCH=arm
 ENV GOARM=6
 
 # process wrapper
-RUN go get -v github.com/abiosoft/parent
+#RUN go get -v github.com/abiosoft/parent
+RUN go build -v github.com/abiosoft/parent && mv parent /install/parent
 
 # Note the explicit ARM32v6 cross compilation variables!
 RUN VERSION=${version} PLUGINS=${plugins} /bin/sh /usr/bin/builder.sh
@@ -56,7 +57,7 @@ COPY Caddyfile /etc/Caddyfile
 COPY index.html /srv/index.html
 
 # install process wrapper
-COPY --from=builder /go/bin/parent /bin/parent
+COPY --from=builder /install/parent /bin/parent
 
 RUN file /bin/parent
 
