@@ -33,10 +33,13 @@ LABEL caddy_version="$version"
 # Let's Encrypt Agreement
 ENV ACME_AGREE="false"
 
-RUN apk add --no-cache openssh-client git
+RUN apk add --no-cache openssh-client git file
 
 # install caddy
 COPY --from=builder /install/caddy /usr/bin/caddy
+
+# Debug what's going on with Dockerhub.
+RUN file /usr/bin/caddy
 
 # validate install
 RUN /usr/bin/caddy -version
