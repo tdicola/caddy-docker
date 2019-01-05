@@ -24,6 +24,9 @@ RUN GOARCH=arm GOARM=6 VERSION=${version} PLUGINS=${plugins} /bin/sh /usr/bin/bu
 FROM arm32v6/alpine:3.8
 LABEL maintainer "Abiola Ibrahim <abiola89@gmail.com>"
 
+# Explicitly add the QEMU ARM static interpreter binary for cross-architecture builds on Dockerhub.
+COPY qemu-arm-static /usr/bin
+
 ARG version="0.11.1"
 LABEL caddy_version="$version"
 
